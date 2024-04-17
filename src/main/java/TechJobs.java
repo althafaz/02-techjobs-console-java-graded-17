@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Created by LaunchCode
@@ -9,8 +6,11 @@ import java.util.Scanner;
 public class TechJobs {
 
     static Scanner in = new Scanner(System.in);
-
+    private static final ArrayList<HashMap<String, String>> findAllCopy = new ArrayList<>(JobData.findAll());
     public static void main (String[] args) {
+
+
+        JobData.findByValue("a");
 
         // Initialize our field map with key/name pairs
         HashMap<String, String> columnChoices = new HashMap<>();
@@ -39,7 +39,7 @@ public class TechJobs {
                 String columnChoice = getUserSelection("List", columnChoices);
 
                 if (columnChoice.equals("all")) {
-                    printJobs(JobData.findAll());
+                    printJobs(findAllCopy);
                 } else {
 
                     ArrayList<String> results = JobData.findAll(columnChoice);
@@ -59,7 +59,7 @@ public class TechJobs {
 
                 // What is their search term?
                 System.out.println("\nSearch term:");
-                String searchTerm = in.nextLine();
+                String searchTerm = in.nextLine().toLowerCase();
 
                 if (searchField.equals("all")) {
                     printJobs(JobData.findByValue(searchTerm));
@@ -120,6 +120,19 @@ public class TechJobs {
     // Print a list of jobs
     private static void printJobs(ArrayList<HashMap<String, String>> someJobs) {
 
-        System.out.println("printJobs is not implemented yet");
+        if(someJobs.isEmpty()) {
+            System.out.print("No Results");
+        }
+        else {
+            for (HashMap<String,String> x : someJobs) {
+                System.out.println("\n*****");
+                System.out.println("position type: " + x.get("position type"));
+                System.out.println("name: " + x.get("name"));
+                System.out.println("employer: " + x.get("employer"));
+                System.out.println("location: " + x.get("location"));
+                System.out.println("core competency: " + x.get("core competency"));
+                System.out.println("*****");
+            }
+        }
     }
 }

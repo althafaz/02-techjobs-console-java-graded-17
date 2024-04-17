@@ -5,10 +5,7 @@ import org.apache.commons.csv.CSVRecord;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by LaunchCode
@@ -18,7 +15,7 @@ public class JobData {
     private static final String DATA_FILE = "src/main/resources/job_data.csv";
     private static boolean isDataLoaded = false;
 
-    private static ArrayList<HashMap<String, String>> allJobs;
+    protected static ArrayList<HashMap<String, String>> allJobs;
 
     /**
      * Fetch list of all values from loaded data,
@@ -41,7 +38,7 @@ public class JobData {
                 values.add(aValue);
             }
         }
-
+        Collections.sort(values);
         return values;
     }
 
@@ -56,7 +53,6 @@ public class JobData {
     /**
      * Returns results of search the jobs data by key/value, using
      * inclusion of the search term.
-     *
      * For example, searching for employer "Enterprise" will include results
      * with "Enterprise Holdings, Inc".
      *
@@ -75,10 +71,17 @@ public class JobData {
 
             String aValue = row.get(column);
 
-            if (aValue.contains(value)) {
+            if (aValue.toLowerCase().contains(value)) {
                 jobs.add(row);
             }
         }
+
+//        jobs.sort(new Comparator<HashMap<String, String>>() {
+//            public int compare(HashMap<String, String> student1, HashMap<String, String> student2) {
+//
+//                return student1.get("position type").compareTo(student2.get("position type"));
+//            }
+//        });
 
         return jobs;
     }
@@ -95,7 +98,19 @@ public class JobData {
         loadData();
 
         // TODO - implement this method
-        return null;
+
+        ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
+
+        for(HashMap<String,String> job : allJobs){
+            for(String k : job.keySet()){
+                if(job.get(k).toLowerCase().contains(value)){
+                    jobs.add(job);
+                    break;
+                }
+            }
+        }
+
+        return jobs;
     }
 
     /**
@@ -129,6 +144,7 @@ public class JobData {
 
                 allJobs.add(newJob);
             }
+
 
             // flag the data as loaded, so we don't do it twice
             isDataLoaded = true;
